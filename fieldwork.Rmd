@@ -1,0 +1,182 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+data <- read.csv("soil_data.csv", header = TRUE, sep = ",")
+data
+
+```
+```{r}
+install.packages("plotrix")                           # Install plotrix R package
+library("plotrix") 
+```
+
+
+```{r}
+Ozone_1 <- subset(data, data$Soil.Layer_1 == "O")
+Ozone_1$Layer.Length..cm._1
+Ozone_2<- subset(data, data$Soil.Layer_2 == "O")
+Ozone_1$Layer.Length..cm._2
+
+Ezone_1 <- subset(data, data$Soil.Layer_1 == "E")
+Ezone_1$Layer.Length..cm._1
+Ezone_2<- subset(data, data$Soil.Layer_2 == "E")
+
+Azone_1 <- subset(data, data$Soil.Layer_1 == "A")
+Azone_2<- subset(data, data$Soil.Layer_2 == "A")
+
+Bzone_1<- subset(data, data$Soil.Layer_1 == "B")
+Bzone_2<- subset(data, data$Soil.Layer_2 == "B")
+
+Ozone_total<- append(Ozone_1$Layer.Length..cm._1,Ozone_1$Layer.Length..cm._2 )
+Ezone_total<- append(Ezone_1$Layer.Length..cm._1,Ezone_1$Layer.Length..cm._2 )
+Azone_total<- append(Azone_1$Layer.Length..cm._1,Azone_1$Layer.Length..cm._2 )
+Bzone_total<- append(Bzone_1$Layer.Length..cm._1,Bzone_1$Layer.Length..cm._2 )
+```
+
+
+```{r}
+mean(Ozone_total)
+mean(Ezone_total)
+mean(Azone_total)
+mean(Bzone_total)
+sd(Ozone_total)
+sd(Ezone_total)
+sd(Azone_total)
+sd(Bzone_total)
+std.error(Ozone_total)  
+std.error(Ezone_total)  
+std.error(Azone_total)  
+std.error(Bzone_total)  
+
+
+
+```
+
+
+
+```{r}
+O=list(Ozone_1$Layer.Length..cm._1,Ozone_2$Layer.Length..cm._2)
+A=list(Azone_1$Layer.Length..cm._1,Azone_2$Layer.Length..cm._2)
+B=list(Bzone_1$Layer.Length..cm._1,Bzone_2$Layer.Length..cm._2)
+E=list(Ezone_1$Layer.Length..cm._1,Ezone_2$Layer.Length..cm._2)
+total=list(Ozone_total,Azone_total,Ezone_total,Bzone_total)
+
+
+boxplot(O , main="O Zone Boxplot", xlab = "Group",  ylab = "Layer Length (cm)")
+stripchart(O, vertical = TRUE, method = "jitter", pch = 19, add = TRUE,col="red")
+
+boxplot(A , main="A Zone Boxplot", xlab = "Group",  ylab = "Layer Length (cm)")
+stripchart(A, vertical = TRUE, method = "jitter", pch = 19, add = TRUE,col="red")
+
+boxplot(E , main="E Zone Boxplot", xlab = "Group",  ylab = "Layer Length (cm)")
+stripchart(E, vertical = TRUE, method = "jitter", pch = 19, add = TRUE,col="red")
+
+boxplot(B , main="B Zone Boxplot", xlab = "Group",  ylab = "Layer Length (cm)")
+stripchart(B, vertical = TRUE, method = "jitter", pch = 19, add = TRUE,col="red")
+
+label=c("O","A","E","B")
+boxplot(total, names=label, main="Soil Zone Boxplot of Two Groups", xlab = "Zone",  ylab = "Layer Length (cm)")
+stripchart(total, vertical = TRUE, method = "jitter", pch = 19, add = TRUE,col="red")
+```
+
+
+
+```{r}
+data_soil <- read.csv("soil_color1.csv", header = TRUE, sep = ",")
+data_soil
+
+```
+
+```{r}
+O_color <- subset(data_soil, data$Soil.Layer == "O")
+A_color <- subset(data_soil, data$Soil.Layer == "A")
+E_color <- subset(data_soil, data$Soil.Layer == "E")
+B_color <- subset(data_soil, data$Soil.Layer == "B")
+
+```
+
+```{r}
+total_color_y=list(O_color$y,A_color$y,E_color$y,B_color$y)
+total_color_x=list(O_color$x,A_color$x,E_color$x,B_color$x)
+
+label=c("O","A","E","B")
+boxplot(total_color_y, names=label, main="Soil Color for Y axis (Value)", xlab = "Zone",  ylab = "value")
+boxplot(total_color_x, names=label, main="Soil Color for X axis (Chroma)", xlab = "Zone",  ylab = "value")
+```
+```{r}
+O_texture <- subset(data_soil, data$Soil.Layer == "O")
+OT<-O_texture$Soil.Texture
+A_texture <- subset(data_soil, data$Soil.Layer == "A")
+AT<-A_texture$Soil.Texture
+E_texture <- subset(data_soil, data$Soil.Layer == "E")
+ET<-E_texture$Soil.Texture
+B_texture <- subset(data_soil, data$Soil.Layer == "B")
+BT<-A_texture$Soil.Texture
+
+```
+
+```{r}
+# Creating variable
+a=OT
+b=AT
+c=ET
+d=BT
+  
+# Finding maximum length
+max_ln1 <- max(c(length(a), length(b)))
+max_ln2 <- max(c(length(c), length(d)))
+max_ln<-max(max_ln2,max_ln1)
+gfg_data<- data.frame(O = c(a,rep(NA, max_ln - length(a))),
+                      A = c(b,rep(NA, max_ln - length(b))),
+                      E = c(c,rep(NA, max_ln - length(c))),
+                      B = c(d,rep(NA, max_ln - length(d))))
+  
+gfg_data
+is.data.frame((gfg_data))
+```
+
+
+
+```{r}
+data2 <- read.csv("canopy_data.csv", header = TRUE, sep = ",")
+data2
+```
+
+```{r}
+Rank1 <- subset(data2, data2$Group == "Rank1")
+Rank2 <- subset(data2, data2$Group == "Rank2")
+Rank3 <- subset(data2, data2$Group == "Rank3")
+Rank4 <- subset(data2, data2$Group == "Rank4")
+Rank5 <- subset(data2, data2$Group == "Rank5")
+
+Rank1$sk
+total2=list(Rank1$sk,Rank2$sk,Rank3$sk,Rank4$sk, Rank5$sk)
+
+label=c("rank1","rank2","rank3","rank4","rank5")
+boxplot(total2, names=label, main="Canopy Cover Boxplot For Tree DBH Ranking", xlab = "Ranking of DBH",  ylab = "Canopy Cover (%)")
+
+```
+
+```{r}
+data3 <- read.csv("water1.csv", header = TRUE, sep = ",")
+data3
+```
+```{r}
+total3=list(data3$DO,data3$pH)
+label=c("DO (mg/L)","pH")
+boxplot(total3, names=label, main="Water quality Boxplot ", xlab = "Indicator",  ylab = "value")
+
+
+
+```
+
+
+
+
